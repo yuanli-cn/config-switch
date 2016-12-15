@@ -33,3 +33,6 @@ class Config_CNOS(Config_Switch):
 
     def enable_telnet(self):
         self.conn.exec_command('feature telnet\n')
+
+    def config_ntp(self, ntp_server):
+        self.conn.exec_command('ntp server %s\n' % ntp_server)
