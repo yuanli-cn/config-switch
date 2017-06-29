@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from config_cnos import Config_CNOS
+from config.config_cnos import Config_CNOS
 
 class Config_STP(Config_CNOS):
     def __init__(self, conn):
@@ -24,7 +24,7 @@ class Config_MSTP(Config_STP):
     conf_dict format {'0-10':4096, '20,30':8192}
     '''
     def config_mst_priority(self, conf_dict):
-        for inst,prio in conf_dict.iteritems():
+        for inst,prio in conf_dict.items():
             self.conn.exec_command('spanning-tree mst %s priority %d\n'%(inst, prio))
 
     def config_mst_name(self, name, need_exit=False):
@@ -41,7 +41,7 @@ class Config_MSTP(Config_STP):
     conf_dict format {1:'1', 2:'20-30', 4:'40-42,45'}
     '''
     def config_mst_vlan(self, conf_dict, need_exit=False):
-        for inst,vlan in conf_dict.iteritems():
+        for inst,vlan in conf_dict.items():
             self.conn.exec_command('instance %d vlan %s\n'%(inst, vlan))
         if need_exit:
             self.conn.exec_command('exit\n')

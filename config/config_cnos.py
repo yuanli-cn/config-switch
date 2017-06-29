@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from config_switch import Config_Switch
+from config.config_switch import Config_Switch
 
 class Config_CNOS(Config_Switch):
     def __init__(self, conn):
@@ -36,3 +36,6 @@ class Config_CNOS(Config_Switch):
 
     def config_ntp(self, ntp_server):
         self.conn.exec_command('ntp server %s\n' % ntp_server)
+
+    def disable_ztp(self):
+        self.conn.exec_command('startup zerotouch force disable\n')

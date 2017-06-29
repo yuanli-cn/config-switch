@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from config_cnos import Config_CNOS
+from config.config_cnos import Config_CNOS
 
 class Config_VLAG(Config_CNOS):
     def __init__(self, conn):
@@ -30,14 +30,13 @@ class Config_VLAG(Config_CNOS):
 
     def disable_vlag_inst(self, inst_list):
         for inst in inst_list:
-            print 'disable vlag inst %d'%inst
             self.conn.exec_command('no vlag instance %d enable\n'%inst)
 
     '''
     conf_dict format {1:1, 2:20, 4:100}
     '''
     def create_vlag_inst(self, conf_dict):
-        for inst, pch_id in conf_dict.iteritems():
+        for inst, pch_id in conf_dict.items():
             self.conn.exec_command('vlag instance %d port-aggregation %d\n'%(inst, pch_id))
 
     def remove_vlag_inst(self, inst_list):

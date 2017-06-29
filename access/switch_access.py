@@ -21,10 +21,10 @@ class Switch_Access:
         self._is_login = False
 
     def log(self, message=''):
-        print '[%s:%s, %s]'%(self.ip, self.port, str(datetime.now())), message
+        print ('[%s:%s, %s]'%(self.ip, self.port, str(datetime.now())), message)
 
     def fail(self, message=''):
-        print '[fail on %s:%s, %s]'%(self.ip, self.port, str(datetime.now())), message
+        print ('[fail on %s:%s, %s]'%(self.ip, self.port, str(datetime.now())), message)
 
     def is_login(self):
         return self._is_login

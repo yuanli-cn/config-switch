@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from config_cnos import Config_CNOS
+from config.config_cnos import Config_CNOS
 
 class Config_if(Config_CNOS):
     def __init__(self, conn):
@@ -18,7 +18,7 @@ class Config_if(Config_CNOS):
                       'port-aggression 10':'access'}
     '''
     def bridge_port_mode(self, conf_dict):
-        for intf, mode in conf_dict.iteritems():
+        for intf, mode in conf_dict.items():
             self.enter_intf_mode_from_conf_mode(intf)
             self.conn.exec_command('bridge-port mode %s\n'%mode)
             self.conn.exec_command('exit\n')
@@ -28,7 +28,7 @@ class Config_if(Config_CNOS):
                       'port-aggression 10':'egress'}
     '''
     def tag_native(self, conf_dict):
-        for intf, mode in conf_dict.iteritems():
+        for intf, mode in conf_dict.items():
             self.enter_intf_mode_from_conf_mode(intf)
             self.conn.exec_command('vlan dot1q tag native %s\n'%mode);
             self.conn.exec_command('exit\n');
@@ -38,9 +38,19 @@ class Config_if(Config_CNOS):
                       'port-aggression 10':['remove', '100,102']}
     '''
     def trunk_allow_vlan(self, conf_dict):
-        for intf,info_list in conf_dict.iteritems():
+        for intf,info_list in conf_dict.items():
             self.enter_intf_mode_from_conf_mode(intf)
             self.conn.exec_command('bridge-port trunk allowed vlan %s %s\n'%(info_list[0], info_list[1]));
+            self.conn.exec_command('exit\n');
+
+    '''
+    conf_dict format {'ethernet 1/1, ethernet 1/2':10, 'ethernet 1/3-4':20,\
+                      'port-aggression 10':20}
+    '''
+    def trunk_native_vlan(self, conf_dict):
+        for intf,vlan in conf_dict.items():
+            self.enter_intf_mode_from_conf_mode(intf)
+            self.conn.exec_command('bridge-port trunk native vlan %d\n'%vlan);
             self.conn.exec_command('exit\n');
 
     '''
@@ -48,7 +58,7 @@ class Config_if(Config_CNOS):
                       'port-aggression 10':100}
     '''
     def access_vlan(self, conf_dict):
-        for intf,vlan in conf_dict.iteritems():
+        for intf,vlan in conf_dict.items():
             self.enter_intf_mode_from_conf_mode(intf)
             self.conn.exec_command('bridge-port access vlan %d\n'%vlan);
             self.conn.exec_command('exit\n');
@@ -58,7 +68,7 @@ class Config_if(Config_CNOS):
                       'port-aggression 10':'up'}
     '''
     def set_status(self, conf_dict):
-        for intf,status in conf_dict.iteritems():
+        for intf,status in conf_dict.items():
             self.enter_intf_mode_from_conf_mode(intf)
             if status is 'down':
                 self.conn.exec_command('shutdown\n');
@@ -75,7 +85,7 @@ class Config_eth(Config_if):
                       'ethernet 1/10':[300, 'off']}
     '''
     def add_to_pch(self, conf_dict):
-        for intf,info_list in conf_dict.iteritems():
+        for intf,info_list in conf_dict.items():
             self.enter_intf_mode_from_conf_mode(intf)
             self.conn.exec_command('aggregation-group %d mode %s\n'%(info_list[0], info_list[1]));
             self.conn.exec_command('exit\n');

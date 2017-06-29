@@ -2,7 +2,7 @@
 
 import telnetlib  
 import re
-from switch_access import Switch_Access
+from access.switch_access import Switch_Access
 
 class Switch_Telnet(Switch_Access):
     def __init__(self,
@@ -16,8 +16,8 @@ class Switch_Telnet(Switch_Access):
         try:
             self.conn = telnetlib.Telnet(ip, port=port, timeout=timeout)
         # TODO: more specific error-handling (?)
-        except Exception, e:
-            msg = '%s %s' % (e.__class__, e)
+        except Exception as e:
+            msg = 'create telnet instance fail. %s %s' % (e.__class__, e)
             self.fail(msg)
             return
 
@@ -37,7 +37,7 @@ class Switch_Telnet(Switch_Access):
             return
 
         # login
-        self.send_command(username+'\n', ignore_login_state=True)
+        self.send_command(username+"\n", ignore_login_state=True)
         output = self.get_output(read_end='^(\r|\n|.)*ssword:[ ]*')
         if output is None or output[0] < 0:
             self.fail('Login fail: fail to input username')
@@ -59,9 +59,9 @@ class Switch_Telnet(Switch_Access):
             return False
 
         try:
-            self.conn.write(command)
-        except Exception, e:
-            msg = '%s %s' % (e.__class__, e)
+            self.conn.write(command.encode('ascii'))
+        except Exception as e:
+            msg = 'send command fail. %s %s' % (e.__class__, e)
             self.fail(msg)
             return False
 
@@ -84,7 +84,7 @@ class Switch_Telnet(Switch_Access):
 
         if output is None or output[0] < 0:
             return None
-        m = re.match('^.*% Invalid input detected .*$', output[2], re.DOTALL)
+        m = re.match('^.*% Invalid input detected .*$'.encode('ascii'), output[2], re.DOTALL)
         if m:
             msg = 'Switch ERROR: command %s failed with %s' %\
                 (command, m.group(0))
@@ -104,9 +104,9 @@ class Switch_Telnet(Switch_Access):
             timeout = self.timeout
 
         try:
-            read_buf = self.conn.expect([read_end], timeout)
-        except Exception, e:
-            msg = '%s %s' % (e.__class__, e)
+            read_buf = self.conn.expect([bytes(read_end, 'utf-8')], timeout)
+        except Exception as e:
+            msg = 'get output fail. %s %s' % (e.__class__, e)
             self.fail(msg)
             return None
 

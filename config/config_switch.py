@@ -1,5 +1,3 @@
-#!/usr/bin/python
-
 from abc import ABCMeta, abstractmethod
 from access.switch_access import Switch_Access
 
@@ -8,7 +6,7 @@ class Config_Switch():
 
     def __init__(self, conn):
         if not isinstance(conn, Switch_Access):
-            print 'wrong connection'
+            print ('wrong connection. parent of conn is %s'%conn.__class__.__bases__)
             return
 
         if not conn.is_login():
@@ -55,6 +53,10 @@ class Config_Switch():
     @abstractmethod
     def config_mgmt(self, mgmt_ip, mask, gateway_ip):
         pass
+
+    def exit(self):
+        self._back_priv_mode()
+        self.conn.exec_command('exit\n', read_output=False)
 
     def close(self):
         self.conn.close()

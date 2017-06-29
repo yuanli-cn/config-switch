@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from config_cnos import Config_CNOS
+from config.config_cnos import Config_CNOS
 
 class Config_VLAN(Config_CNOS):
     def __init__(self, conn):
