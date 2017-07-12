@@ -28,23 +28,27 @@ def reset_switch(switch_info_dict):
             switch_info_dict['mask'], switch_info_dict['gateway'])
     cnos_switch.enable_telnet()
     cnos_config_if = Config_eth(switch_con)
-    cnos_config_if.set_status({'ethernet 1/1-54':'down'})
+    cnos_config_if.set_status({switch_info_dict['intfs']:'down'})
     cnos_switch.save_config()
     cnos_switch.exit()
     cnos_switch.close()
 
-switch_info_list = [{'ip':'10.240.236.250', 'port':10011, 'user':'admin',\
-                     'pass':'admin', 'mgmt_ip':'10.240.236.200',\
-                     'mask':'255.255.255.0', 'gateway':'10.240.236.129'},\
-                    {'ip':'10.240.236.250', 'port':10012, 'user':'admin',\
-                     'pass':'admin', 'mgmt_ip':'10.240.236.201',\
-                     'mask':'255.255.255.0', 'gateway':'10.240.236.129'},\
-                    {'ip':'10.240.236.250', 'port':10013, 'user':'admin',\
-                     'pass':'admin', 'mgmt_ip':'10.240.236.202',\
-                     'mask':'255.255.255.0', 'gateway':'10.240.236.129'},\
-                    {'ip':'10.240.236.250', 'port':10014, 'user':'admin',\
-                     'pass':'admin', 'mgmt_ip':'10.240.236.203',\
-                     'mask':'255.255.255.0', 'gateway':'10.240.236.129'}]
+switch_info_list = [{'ip':'10.240.235.251', 'port':10001, 'user':'admin',\
+                     'pass':'admin', 'mgmt_ip':'10.240.235.184',\
+                     'mask':'255.255.255.128', 'gateway':'10.240.235.129',\
+                     'intfs':'ethernet 1/1-96'},\
+                    {'ip':'10.240.235.251', 'port':10002, 'user':'admin',\
+                     'pass':'admin', 'mgmt_ip':'10.240.235.182',\
+                     'mask':'255.255.255.128', 'gateway':'10.240.235.129',\
+                     'intfs':'ethernet 1/1-96'},\
+                    {'ip':'10.240.235.251', 'port':10003, 'user':'admin',\
+                     'pass':'admin', 'mgmt_ip':'10.240.235.180',\
+                     'mask':'255.255.255.128', 'gateway':'10.240.235.129',\
+                     'intfs':'ethernet 1/1-54'},\
+                    {'ip':'10.240.235.251', 'port':10004, 'user':'admin',\
+                     'pass':'admin', 'mgmt_ip':'10.240.235.179',\
+                     'mask':'255.255.255.128', 'gateway':'10.240.235.129',\
+                     'intfs':'ethernet 1/1-54'}]
 
 for switch in switch_info_list:
     t = threading.Thread(target=reset_switch, args=(switch,))
