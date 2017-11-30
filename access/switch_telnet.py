@@ -9,9 +9,12 @@ class Switch_Telnet(Switch_Access):
                  ip,
                  username,
                  password,
+                 factory_start=False,
+                 factory_username='admin',
+                 factory_password='admin',
                  timeout=5,
                  port=23):
-        super(Switch_Telnet, self).__init__(ip, username, password, timeout, port)
+        super(Switch_Telnet, self).__init__(ip, username, password, factory_username, factory_password, timeout, port)
 
         try:
             self.conn = telnetlib.Telnet(ip, port=port, timeout=timeout)
@@ -36,21 +39,10 @@ class Switch_Telnet(Switch_Access):
                 self.log('Login: but not in normal mode')
             return
 
-        # login
-        self.send_command(username+"\n", ignore_login_state=True)
-        output = self.get_output(read_end='^(\r|\n|.)*ssword:[ ]*')
-        if output is None or output[0] < 0:
-            self.fail('Login fail: fail to input username')
-            return
+        if factory_start is True:
+            self.factory_login()
         else:
-            self.send_command(password+'\n', ignore_login_state=True)
-            output = self.get_output(read_end='^(\r|\n|.)*(\>|\#)', timeout=-1)
-            if output is None or output[0] < 0:
-                self.fail('Login fail: username or password error')
-                return
-
-        self.log('Login successful')
-        self._is_login = True
+            self.normal_login()
 
     def send_command(self, command, ignore_login_state = False):
         if ignore_login_state is False and self.is_login() is False:

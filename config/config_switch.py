@@ -10,7 +10,7 @@ class Config_Switch():
             return
 
         if not conn.is_login():
-            self.conn.fail('Have not login yet')
+            conn.fail('Have not login yet')
             return
 
         self.conn = conn

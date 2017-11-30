@@ -39,3 +39,15 @@ class Config_CNOS(Config_Switch):
 
     def disable_ztp(self):
         self.conn.exec_command('startup zerotouch force disable\n')
+
+    def disable_logging(self):
+        self.conn.exec_command('no logging console\n')
+        self.conn.exec_command('no logging monitor\n')
+
+    def disable_idle(self):
+        self.conn.exec_command('line console 0\n')
+        self.conn.exec_command('exec-timeout 0\n')
+        self.conn.exec_command('exit\n')
+        self.conn.exec_command('line vty 0 63\n')
+        self.conn.exec_command('exec-timeout 0\n')
+        self.conn.exec_command('exit\n')
